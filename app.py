@@ -1,24 +1,128 @@
 from getpass import getpass
+import re
+from datetime import datetime
 from api_hackaton_safra import use_api
 
+
+
+SCREEN_WIDTH = 70
+
+
+
+def print_line( texto, left=False ):
+
+    if texto == '':
+        print( '|', end='' )
+        for i in range( SCREEN_WIDTH ):
+            print( '-', end='' )
+        print( '|' )
+    else:
+        blank_size = SCREEN_WIDTH - len(texto)
+
+        if blank_size >= 2:
+            left_size = int(blank_size / 2)
+            right_size = int(blank_size / 2)
+
+            if left:
+                left_size = 1
+                right_size = blank_size - 1
+            elif blank_size % 2 != 0:
+                right_size += 1
+        else:
+            left_size = 1
+            right_size = 1
+        
+        print( '|', end='' )
+        for i in range( left_size ):
+            print( ' ', end='' )
+        print( texto, end='' )
+        for i in range( right_size ):
+            print( ' ', end='' )
+        print( '|' )
+
+
+
+def input_line( input_type, print_value='', print_error='' ):
+    if input_type == 'email':
+        return check_email( print_value, print_error )
+    elif input_type == 'float':
+        return float(check_value( print_value, print_error ))
+    elif input_type == 'integer':
+        return int(check_value( print_value, print_error ))
+    elif input_type == 'date':
+        return check_date( print_value, print_error )
+    elif input_type == 'choice':
+        return input( '| ' )
+    elif input_type == 'password':
+        return getpass( '| ' + print_value + ': ' )
+    elif input_type == 'any':
+        return input( '| ' + print_value + ': ' )
+
+
+
+def check_email( print_email, print_error ):
+    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+    email = ''
+    while not re.search( regex,email ):
+        email = input( '| ' + print_email + ': ' )
+        if not re.search( regex,email ):
+            print_line( print_error )
+    return email
+
+
+
+def check_value( print_valor, print_error ):
+    valor = ''
+    while not valor.isnumeric():
+        valor = input( '| ' + print_valor + ': ' )
+        if not valor.isnumeric():
+            print_line( print_error )
+    return valor
+
+
+
+def check_date( print_date, print_error ):
+    data = None
+    valid = False
+    while not valid:
+        data = input( '| ' + print_date + ': ' )
+        if data.find('/') != -1:
+            day, month, year = data.split('/')
+            try :
+                datetime(int(year),int(month),int(day))
+                valid = True
+            except ValueError :
+                print_line( print_error )
+        else:
+            print_line( print_error )
+    return data
+
+
+
 def login():
+
     exit_screen = False
     while not exit_screen:
 
-        print( '\nTela de Inicial' )
-        print( '1 para login' )
-        print( 'enter para sair' )
-        escolha = input()
+        print_line( '' )
+        print_line( 'Tela de Inicial' )
+        print_line( '  ' )
+        print_line( '1 para login', left=True )
+        print_line( 'Enter para sair', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
 
-        if escolha == '1':
-            account_id = input( 'Insira sua conta: ' )
-            password = getpass( 'Insira sua senha: ' )
+        if choice == '1':
+            account_id = input_line( 'any', 'Insira sua conta' )
+            password = input_line( 'password', 'Insira sua senha' )
 
             if account_id in ( '00711234511', '00711234522', '00711234533', 'teste' ) and password == '1':
+                print_line( '' )
                 termos()
             else:
-                print( 'Usuário ou senha incorreto' )
+                print_line( 'Usuário ou senha incorreto' )
         else:
+            print_line( '' )
             exit()
 
 
@@ -28,86 +132,115 @@ def termos():
     exit_screen = False
     while not exit_screen:
 
-        print( '\nTermos' )
-        print( 'bla bla bla bla bla' )
-        print( '1 para aceitar' )
-        print( '2 para negar' )
-        escolha = input()
+        print_line( '' )
+        print_line( 'Termos' )
+        for i in range( 8 ):
+            print_line( 'bla bla bla bla' )
+        print_line( '  ' )
+        print_line( '1 para aceitar', left=True )
+        print_line( '2 para negar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
 
-        if escolha == '1':
+        if choice == '1':
+            print_line( '' )
             cadastro()
-        elif escolha == '2':
+        elif choice == '2':
+            print_line( '' )
             exit()
         else:
-            print( 'escolha inválida' )
+            print_line( 'Escolha inválida' )
 
 
 
 def cadastro():
 
-    print( '\nCadastro' )
-    name = input( 'Nome: ' )
-    name = input( 'E-mail: ' )
-    name = input( 'Telefone: ' )
+    print_line( '' )
+    print_line( 'Cadastro' )
+    print_line( '  ' )
+    name = input_line( 'any', 'Nome' )
+    email = input_line( 'email', 'E-mail', 'E-mail inválido' )
+    telefone = input_line( 'any', 'Telefone' )
+    print_line( '  ' )
 
     exit_screen = False
     while not exit_screen:
 
-        print( '1 para cadastrar' )
-        print( '2 para voltar' )
-        escolha = input()
+        print_line( '1 para cadastrar', left=True )
+        print_line( '2 para voltar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
 
-        if escolha == '1':
-            informacoes = {"Name": "Igão", "Email": "bongi90@hotmail.com", "Phone": "+5511991353333"}
-            resposta = use_api( '00711234533', 'opt_in', informacoes )
-            print( resposta )
+        if choice == '1':
+            infos = {"Name": name, "Email": email, "Phone": telefone}
+            #resposta = use_api( '00711234533', 'opt_in', infos )
+            resposta = 'API ainda nao ta funcionando o optin'
+            print_line( resposta )
+            print_line( '' )
             perfil()
-        elif escolha == '2':
+        elif choice == '2':
+            print_line( '' )
             termos()
         else:
-            print( 'escolha inválida' )
+            print_line( 'Escolha inválida' )
 
 
 
 def perfil():
 
-    print( '\nPerfil' )
-    name = input( 'pergunta 1: ' )
+    print_line( '' )
+    print_line( 'Perfil' )
+    print_line( '  ' )
+    p1 = input_line( 'any', 'Pergunta 1' )
+    p2 = input_line( 'any', 'Pergunta 2' )
+    p3 = input_line( 'any', 'Pergunta 3' )
+    print_line( '  ' )
 
     exit_screen = False
     while not exit_screen:
 
-        print( '1 para avancar' )
-        print( '2 para voltar' )
-        escolha = input()
+        print_line( '1 para avançar', left=True )
+        print_line( '2 para voltar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
 
-        if escolha == '1':
+        if choice == '1':
+            print_line( '' )
             objetivo()
-        elif escolha == '2':
+        elif choice == '2':
+            print_line( '' )
             cadastro()
         else:
-            print( 'escolha inválida' )
+            print_line( 'Escolha inválida' )
 
 
 
 def objetivo():
 
-    print( '\nObjetivo' )
-    name = input( 'informe seu objetivo: ' )
+    print_line( '' )
+    print_line( 'Objetivo' )
+    print_line( '  ' )
+    objetivo = input_line( 'any', 'Seu objetivo' )
+    valor = input_line( 'float', 'Valor em R$', 'Valor inválido' )
+    data = input_line( 'date', 'Data final', 'Data inválida' )
+    print_line( '  ' )
 
     exit_screen = False
     while not exit_screen:
 
-        print( '1 para avancar' )
-        print( '2 para voltar' )
-        escolha = input()
+        print_line( '1 para avançar', left=True )
+        print_line( '2 para voltar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
 
-        if escolha == '1':
+        if choice == '1':
+            print_line( '' )
             detalhes()
-        elif escolha == '2':
+        elif choice == '2':
+            print_line( '' )
             perfil()
         else:
-            print( 'escolha inválida' )
+            print_line( 'Escolha inválida' )
 
 
 
@@ -116,69 +249,89 @@ def detalhes():
     exit_screen = False
     while not exit_screen:
 
-        print( '\nPrincipal - Detalhes' )
-        nome = use_api( '00711234533', 'conta' )['Account']['Name']
-        print( 'Olá {0}'.format( nome ) )
+        print_line( '' )
+        print_line( 'Principal - Detalhes' )
+        print_line( '  ' )
+        nome = use_api( '00711234533', 'conta' )['Nickname']
+        print_line( 'Olá {0}'.format( nome ) )
         saldo = float(use_api( '00711234533', 'saldo' ))
-        print( 'R$ {0:,.2f}'.format( saldo ) )
-        print( 'de R$ 100.000,00' )
-        print( 'faltam R$ {0:,.2f}'.format( 100000 - saldo ) )
-        print( '{0:.1f}%'.format( saldo / 1000 ) )
-        print( '...' )
-        print( '1 para Depósitos' )
-        print( '2 para Desafios' )
-        print( '3 para Adicionar saldo' )
-        print( '4 Solicitar crédito' )
-        print( '5 para sair' )
-        escolha = input()
+        print_line( 'R$ {0:,.2f}'.format( saldo ) )
+        print_line( 'de R$ 100.000,00' )
+        print_line( 'faltam R$ {0:,.2f}'.format( 100000 - saldo ) )
+        print_line( '{0:.1f}%'.format( saldo / 1000 ) )
+        print_line( '...' )
+        print_line( '  ' )
+        print_line( '1 para Extrato', left=True )
+        print_line( '2 para Desafios', left=True )
+        print_line( '3 para Adicionar saldo', left=True )
+        print_line( '4 Solicitar crédito', left=True )
+        print_line( '5 Loja de pontos', left=True )
+        print_line( '6 Convidar', left=True )
+        print_line( '7 Compartilhar', left=True )
+        print_line( '8 para sair', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
 
-        if escolha == '1':
+        if choice == '1':
             depositos()
-        elif escolha == '2':
+        elif choice == '2':
             desafios()
-        elif escolha == '3':
-            print('Depositos')
-        elif escolha == '4':
-            print('Depositos')
-        elif escolha == '5':
+        elif choice == '3':
+            adicionar_saldo()
+        elif choice == '4':
+            print_line('nao disponibilizado ainda')
+        elif choice == '5':
+            print_line('nao disponibilizado ainda')
+        elif choice == '6':
+            convidar_pessoas()
+        elif choice == '7':
+            compartilhar_objetivo()
+        elif choice == '8':
             exit()
         else:
-            print( 'escolha inválida' )
+            print_line( 'Escolha inválida' )
 
 
 
-def depositos():
+def extrato():
 
     exit_screen = False
     while not exit_screen:
 
-        print( '\nPrincipal - Depósitos' )
-        print( 'Historico' )
-        print( 'Valor     Motivo         Data' )
+        print_line( '' )
+        print_line( 'Principal - Extrato' )
+        print_line( '  ' )
+        print_line( 'Historico' )
+        print_line( 'Valor           Motivo            Data' )
         extrato = use_api( '00711234533', 'extrato' )
         for lines in extrato:
+            value_to_print = ''
             valor = float(lines['amount']['amount'])
             tipo_transacao = lines['creditDebitIndicator']
             if tipo_transacao == 'Debit':
-                print( '- R$ {0:,.2f} '.format( valor ), end='' )
+                value_to_print += '-'
             elif tipo_transacao == 'Credit':
-                print( '+ R$ {0:,.2f} '.format( valor ), end='' )
-            print( lines['transactionInformation'], end='' )
-            print( '  {0}'.format(lines['valueDateTime']) )
-        print( '...' )
-        print( '1 para Detalhes' )
-        print( '2 para Desafios' )
-        print( '3 para sair' )
-        escolha = input()
+                value_to_print += '+'
+            value_to_print += 'R$ {0:,.2f} '.format( valor )
+            value_to_print += '  {0}'.format( lines['transactionInformation'] )
+            value_to_print += '  {0}'.format(lines['valueDateTime'])
+            print_line( value_to_print )
+        print_line( '...' )
+        print_line( '  ' )
+        print_line( '1 para Detalhes', left=True )
+        print_line( '2 para Desafios', left=True )
+        print_line( '3 para sair', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
 
-        if escolha == '1':
+        if choice == '1':
             detalhes()
-        elif escolha == '2':
+        elif choice == '2':
             desafios()
-        elif escolha == '3':
+        elif choice == '3':
             exit()
         else:
-            print( 'escolha inválida' )
+            print_line( 'Escolha inválida' )
 
 
 
@@ -187,26 +340,30 @@ def desafios():
     exit_screen = False
     while not exit_screen:
 
-        print( '\nPrincipal - Desafios' )
-        print( 'Metas atingidas' )
-        print( '10% - 100 pontos' )
-        print( '...' )
-        print( '1 para Detalhes' )
-        print( '2 para Depósitos' )
-        print( '3 para Leaderboard' )
-        print( '4 para sair' )
-        escolha = input()
+        print_line( '' )
+        print_line( 'Principal - Desafios' )
+        print_line( '  ' )
+        print_line( 'Metas atingidas' )
+        print_line( '10% - 100 pontos' )
+        print_line( '...' )
+        print_line( '  ' )
+        print_line( '1 para Detalhes', left=True )
+        print_line( '2 para Extrato', left=True )
+        print_line( '3 para Leaderboard', left=True )
+        print_line( '4 para sair', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice', left=True )
 
-        if escolha == '1':
+        if choice == '1':
             detalhes()
-        elif escolha == '2':
+        elif choice == '2':
             depositos()
-        elif escolha == '3':
+        elif choice == '3':
             leaderboard()
-        elif escolha == '4':
+        elif choice == '4':
             exit()
         else:
-            print( 'escolha inválida' )
+            print_line( 'Escolha inválida' )
 
 
 
@@ -215,19 +372,146 @@ def leaderboard():
     exit_screen = False
     while not exit_screen:
 
-        print( '\nLeaderboard' )
-        print( 'Pessoa Objetivos Medalhas   Pontos' )
-        print( 'Igão A Viagem NY 8 medalhas 100.000 pontos' )
-        print( '...' )
-        print( '1 para sair' )
-        escolha = input()
+        print_line( '' )
+        print_line( 'Leaderboard' )
+        print_line( '  ' )
+        print_line( 'Pessoa   Objetivos   Medalhas     Pontos' )
+        print_line( 'Igão   A Viagem NY   8 medalhas 100.000 pontos' )
+        print_line( '...' )
+        print_line( '  ' )
+        print_line( 'Enter para sair', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
 
-        if escolha == '1':
-            exit_screen = True
+
+
+def adicionar_saldo():
+
+    print_line( '' )
+    print_line( 'Adicionar Saldo' )
+    print_line( '  ' )
+    chave = input_line( 'any', 'Chave Pix' )
+    valor = input_line( 'float', 'Valor em R$', 'Valor inválido' )
+    print_line( '  ' )
+
+    exit_screen = False
+    while not exit_screen:
+
+        print_line( '1 para adicionar', left=True )
+        print_line( '2 para voltar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
+
+        if choice == '1':
+            print_line( 'Valor de R$ {0:.2f} adicionado com sucesso'.format( valor ) )
+            detalhes()
+        elif choice == '2':
+            detalhes()
         else:
-            print( 'escolha inválida' )
+            print_line( 'Escolha inválida' )
+
+
+
+def convidar_pessoas():
+
+    print_line( '' )
+    print_line( 'Convidar pessoas' )
+    print_line( '  ' )
+    objetivo = input_line( 'any', 'Nome do objetivo' )
+    print_line( '  ' )
+
+    exit_screen = False
+    while not exit_screen:
+
+        print_line( '1 para digitar as informações', left=True )
+        print_line( '2 para QR Code', left=True )
+        print_line( '3 para voltar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
+
+        if choice == '1':
+            nome = input_line( 'any', 'Nome' )
+            cpf = input_line( 'any', 'CPF' )
+            email = input_line( 'email', 'E-mail', 'E-mail inválido' )
+            print_line( '  ' )
+
+            exit_screen = False
+            while not exit_screen:
+
+                print_line( '1 para adicionar', left=True )
+                print_line( '2 para voltar', left=True )
+                print_line( '  ' )
+                choice = input_line( 'choice' )
+
+                if choice == '1':
+                    print_line( 'Solicitação enviada para {0} no e-mail {1}'.format(nome, email) )
+                    detalhes()
+                elif choice == '2':
+                    exit_screen = True
+                else:
+                    print_line( 'Escolha inválida' )
+        elif choice == '2':
+            print_line( 'Scaneie o QR code ou compartilhe através das redes sociais' )
+            print_line( '  ' )
+            print_line( 'Enter para sair' )
+            input()
+            detalhes()
+        elif choice == '3':
+            detalhes()
+        else:
+            print_line( 'Escolha inválida' )
+
+
+
+def compartilhar_objetivo():
+
+    print_line( '' )
+    print_line( 'Compartilhar objetivo' )
+    print_line( '  ' )
+    objetivo = input_line( 'any', 'Nome do objetivo: ' )
+    print_line( '  ' )
+
+    exit_screen = False
+    while not exit_screen:
+
+        print_line( '1 para digitar as informações', left=True )
+        print_line( '2 para QR Code', left=True )
+        print_line( '3 para voltar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
+
+        if choice == '1':
+            chave = input_line( 'any', 'Chave Pix' )
+            valor = input_line( 'float', 'Valor em R$', 'Valor inválido' )
+            print_line( '  ' )
+
+            exit_screen = False
+            while not exit_screen:
+
+                print_line( '1 para adicionar', left=True )
+                print_line( '2 para voltar', left=True )
+                print_line( '  ' )
+                choice = input_line( 'choice' )
+
+                if choice == '1':
+                    print_line( 'Valor de R$ {0:.2f} compartilhado com sucesso'.format(float(valor)) )
+                    detalhes()
+                elif choice == '2':
+                    exit_screen = True
+                else:
+                    print_line( 'Escolha inválida' )
+        elif choice == '2':
+            print_line( 'Scaneie o QR code ou compartilhe através das redes sociais' )
+            print_line( '  ' )
+            print_line( 'Enter para sair' )
+            input()
+            detalhes()
+        elif choice == '3':
+            detalhes()
+        else:
+            print_line( 'Escolha inválida' )
 
 
 
 if __name__ == '__main__':
-    login()
+    detalhes()

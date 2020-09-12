@@ -63,7 +63,7 @@ def use_api( accountId, tipo_chamada_api, infos=None ):
             with open( script_folder + 'token.txt', 'w' ) as f:
                 f.write( auth_token + '\n' )
                 f.write( str(datetime.now() + timedelta( seconds=expiracao )) )
-            print( '{0} -> Token atualizado'.format( datetime.now() ) )
+            #print( '{0} -> Token atualizado'.format( datetime.now() ) )
         else:
             print( '{0} -> Erro com codigo {1}'.format( datetime.now(), response.status_code ) )
             print( '{0} -> Erro com descricao "{1}"'.format( datetime.now(), response.json() ) )
@@ -111,7 +111,3 @@ def use_api( accountId, tipo_chamada_api, infos=None ):
             filtro = 'fromData=2020-07-09&2020-07-14&playlist=morningCalls&channel=safra'
             end_point = '/media/v1/youtube?{0}'.format( filtro )
             api_request( host=host, end_point=end_point, request_type='GET', headers=headers, correct_response='OPT IN' )
-
-    # qual o sentido de eu ver se a API ta funcionando tendo que ter um token que só ela gera?
-    # o get do transfer faz o que?
-    # em um retorno da API tem "Data" e no outro esta como "data"
