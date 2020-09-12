@@ -1,6 +1,8 @@
+import sys
 from getpass import getpass
 import re
 from datetime import datetime
+import requests
 from api_hackaton_safra import use_api
 
 
@@ -57,11 +59,16 @@ def input_line( input_type, print_value='', print_error='' ):
         return getpass( '| ' + print_value + ': ' )
     elif input_type == 'any':
         return input( '| ' + print_value + ': ' )
+    elif input_type == 'cpf':
+        return check_cpf( print_value, print_error )
+    elif input_type == 'cep':
+        return check_cep( print_value, print_error )
 
 
 
 def check_email( print_email, print_error ):
-    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+    #regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+    regex = '[^@]+@[^@]+\.[^@]+'
     email = ''
     while not re.search( regex,email ):
         email = input( '| ' + print_email + ': ' )
@@ -96,6 +103,50 @@ def check_date( print_date, print_error ):
         else:
             print_line( print_error )
     return data
+
+
+
+def check_cpf( print_cpf, print_error ):
+    valido = False
+    cpf = None
+    while not valido:
+        cpf = input( '| ' + print_cpf + ': ' ).replace('.','').replace('-','')
+        if len(cpf) >= 11:
+            cpf_check = cpf[:9]
+            soma = 0
+            for i in range(1, 10):
+                soma += i * int(cpf_check[i-1])
+            resto = soma % 11
+            if resto == 10:
+                resto = 0
+            cpf_check += str( resto )
+            soma = 0
+            for i in range(10):
+                soma += i * int(cpf_check[i])
+            resto = soma % 11
+            if resto == 10:
+                resto = 0
+            cpf_check += str( resto )
+            if cpf == cpf_check:
+                valido = True
+            else:
+                print_line( print_error )
+        else:
+            print_line( print_error )
+    return cpf
+
+
+
+def check_cep( print_cep, print_error ):
+    status_code = 0
+    while status_code != 200:
+        cep = input( '| ' + print_cep + ': ' )
+        url = 'http://viacep.com.br/ws/{0}/json'.format( cep )
+        response = requests.get( url=url )
+        status_code = response.status_code
+        if status_code != 200:
+            print_line( print_error )
+    return response.json()
 
 
 
@@ -137,8 +188,8 @@ def termos():
         for i in range( 8 ):
             print_line( 'bla bla bla bla' )
         print_line( '  ' )
-        print_line( '1 para aceitar', left=True )
-        print_line( '2 para negar', left=True )
+        print_line( '1 para Aceito', left=True )
+        print_line( '2 para Não aceito', left=True )
         print_line( '  ' )
         choice = input_line( 'choice' )
 
@@ -158,9 +209,30 @@ def cadastro():
     print_line( '' )
     print_line( 'Cadastro' )
     print_line( '  ' )
-    name = input_line( 'any', 'Nome' )
+    name = input_line( 'any', 'Nome completo' )
+    apelido = input_line( 'any', 'Apelido' )
+    cpf = input_line( 'cpf', 'CPF', 'CPF inválido' )
     email = input_line( 'email', 'E-mail', 'E-mail inválido' )
     telefone = input_line( 'any', 'Telefone' )
+    infos_cep = input_line( 'cep', 'CEP', 'CEP inválido' )
+    cep = infos_cep['cep']
+    uf = infos_cep['uf']
+    cidade = infos_cep['localidade']
+    bairro = infos_cep['bairro']
+    endereco = infos_cep['logradouro']
+    print_line( 'UF: {0}'.format( uf ), left=True )
+    print_line( 'Cidade: {0}'.format( cidade ), left=True )
+    print_line( 'Bairro: {0}'.format( bairro ), left=True )
+    print_line( 'Endereço: {0}'.format( endereco ), left=True )
+    numero = input_line( 'integer', 'Nº', 'Número inválido' )
+    complemento = input_line( 'any', 'Complemento' )
+    senha1 = '1'
+    senha2 = '2'
+    while senha1 != senha2:
+        senha1 = input_line( 'password', 'Senha' )
+        senha2 = input_line( 'password', 'Confirme a senha' )
+        if senha1 != senha2:
+            print_line( 'Senhas não conferem' )
     print_line( '  ' )
 
     exit_screen = False
@@ -190,15 +262,46 @@ def perfil():
 
     print_line( '' )
     print_line( 'Perfil' )
-    print_line( '  ' )
-    p1 = input_line( 'any', 'Pergunta 1' )
-    p2 = input_line( 'any', 'Pergunta 2' )
-    p3 = input_line( 'any', 'Pergunta 3' )
-    print_line( '  ' )
+    print_line( 'Nos ajude a te conhecer' )
+    print_line( 'um pouco melhor' )
+
+    exit_question = False
+    while not exit_question:
+        print_line( '  ' )
+        print_line( 'Você já investiu seu dinheiro alguma vez?' )
+        print_line( '1.sim      2.não' )
+        choice = input_line( 'choice' )
+        if choice == '1' or choice.lower() == 'sim' or choice == '2' or choice.lower().replace('ã','a') == 'não':
+            exit_question = True
+        else:
+            print_line( 'Escolha inválida' )
+    
+    exit_question = False
+    while not exit_question:
+        print_line( '  ' )
+        print_line( 'Você tem o costume de guardar dinheiro?' )
+        print_line( '1.sim      2.não' )
+        choice = input_line( 'choice' )
+        if choice == '1' or choice.lower() == 'sim' or choice == '2' or choice.lower().replace('ã','a') == 'não':
+            exit_question = True
+        else:
+            print_line( 'Escolha inválida' )
+        
+    exit_question = False
+    while not exit_question:
+        print_line( '  ' )
+        print_line( 'Você já esteve no vermelho?' )
+        print_line( '1.sim      2.não' )
+        choice = input_line( 'choice' )
+        if choice == '1' or choice.lower() == 'sim' or choice == '2' or choice.lower().replace('ã','a') == 'não':
+            exit_question = True
+        else:
+            print_line( 'Escolha inválida' )
 
     exit_screen = False
     while not exit_screen:
 
+        print_line( '  ' )
         print_line( '1 para avançar', left=True )
         print_line( '2 para voltar', left=True )
         print_line( '  ' )
@@ -514,4 +617,25 @@ def compartilhar_objetivo():
 
 
 if __name__ == '__main__':
-    detalhes()
+    if len( sys.argv ) == 1:
+        print('Por favor, selecione a tela que deseja iniciar como argumento')
+        print('Telas:')
+        print('- login')
+        print('- principal')
+        print('Ex: python app.py login')
+    else:
+        screen = sys.argv[1]
+        if screen == 'login':
+            login()
+        elif screen == 'principal':
+            #cadastro()
+            #perfil()
+            objetivo()
+            #detalhes()
+        else:
+            print( 'Argumento inválido' )
+            print('Por favor, selecione a tela que deseja iniciar como argumento')
+            print('Telas:')
+            print('- login')
+            print('- principal')
+            print('Ex: python app.py login')
