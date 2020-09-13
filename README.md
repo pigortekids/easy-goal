@@ -1,6 +1,6 @@
 # Easy Goal
 
-Esse projeto foi feito para o Hackaton do processo seletivo do programa de trainee do Safra.
+Esse projeto foi feito para o Hackaton do processo seletivo do programa de technee do Safra.
 
 A construção do back-end do projeto foi feita em python, usando uma programação funcional (baseado em funções).
 
@@ -11,6 +11,6 @@ Por fim, construímos um algoritmo para demonstrar como seria a inteligência ar
 Descritivo de cada arquivo desse git:
 - **api_hackaton_safra.py** : script para comunicação com a API disponibilizada para o Hackaton
 - **app.py** : script com o back end (e um front end via prompt) da aplicação
-- **ia.ipynb** : notebook de demonstração do algoritmo que inteligência artificial, que seria usado para categorizar os clientes
+- **ia.ipynb** : notebook de demonstração do algoritmo de inteligência artificial, que seria usado para categorizar os clientes
 
 Ao rodar o app.py, utilize o usuário 'teste' e senha '1' para fazer o login.
