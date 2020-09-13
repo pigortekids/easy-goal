@@ -196,8 +196,12 @@ def login():
 def termos():
 
     print_line( 'Termos' )
-    for i in range( 8 ):
-        print_line( 'bla bla bla bla' )
+    print_line( 'LGPD' )
+    for i in range( 4 ):
+        print_line( 'bla bla bla bla bla bla' )
+    print_line( 'Termos de uso' )
+    for i in range( 4 ):
+        print_line( 'bla bla bla bla bla bla' )
 
     exit_screen = False
     while not exit_screen:
@@ -265,8 +269,7 @@ def cadastro():
             if choice == '1':
                 #infos = {"Name": name, "Email": email, "Phone": telefone}
                 #resposta = use_api( account_id, 'opt_in', infos )
-                resposta = 'API ainda nao ta funcionando o optin'
-                print_line( resposta )
+                #print_line( resposta )
                 screen = 'perfil'
             elif choice == '2':
                 screen = 'termos'
@@ -284,7 +287,7 @@ def perfil():
     while not exit_question:
 
         print_line( '  ' )
-        print_line( 'Você já investiu seu dinheiro alguma vez?' )
+        print_line( 'Você que paga todas as suas contas?' )
         print_line( '1.sim      2.não' )
         choice = input_line( 'choice' )
         if choice == '1' or choice.lower() == 'sim' or choice == '2' or choice.lower().replace('ã','a') == 'nao':
@@ -503,20 +506,10 @@ def rendimentos():
     print_line( 'Rendimentos' )
     print_line( '  ' )
     print_line( 'Historico' )
-    print_line( 'Valor           Motivo            Data' )
-    extrato = use_api( account_id, 'extrato' )
-    for lines in extrato:
-        value_to_print = ''
-        valor = float(lines['amount']['amount'])
-        tipo_transacao = lines['creditDebitIndicator']
-        if tipo_transacao == 'Debit':
-            value_to_print += '-'
-        elif tipo_transacao == 'Credit':
-            value_to_print += '+'
-        value_to_print += 'R$ {0:,.2f} '.format( valor )
-        value_to_print += '  {0}'.format( lines['transactionInformation'] )
-        value_to_print += '  {0}'.format(lines['valueDateTime'])
-        print_line( value_to_print )
+    print_line( 'Investimento      Valor      Rentabilidade' )
+    print_line( '   CDB         R$  1.020,00       2,0 % ' )
+    print_line( '   LCI         R$  5.190,00       3,0 % ' )
+    print_line( '  Fundos       R$  9.780,00      -2,0 % ' )
     print_line( '...' )
 
     exit_screen = False
@@ -648,7 +641,29 @@ def compartilhar_objetivo():
 
 
 def loja_pontos():
-    screen = 'detalhes'
+
+    print_line( 'Loja' )
+
+    exit_screen = False
+    while not exit_screen:
+
+        print_line( '  ' )
+        print_line( '1 R$ 20,00 no Ifood por 5000 moedas', left=True )
+        print_line( '2 R$ 50,00 no Uber por 12000 moedas', left=True )
+        print_line( '3 R$ 200,00 na CVC por 30000 moedas', left=True )
+        print_line( '4 um mês de Netflix por 5000 moedas', left=True )
+        print_line( '5 para voltar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
+
+        if choice in ['1', '2', '3', '4', '5']:
+            exit_screen = True
+            global screen
+            screen = 'detalhes'
+            if int(choice) < 5:
+                print_line( 'Compra realizada com sucesso!' )
+        else:
+            print_line( 'Escolha inválida' )
 
 
 
@@ -703,11 +718,107 @@ def indique_amigo():
 
 
 def investimentos():
-    screen = 'detalhes'
+
+    print_line( 'Investimento' )
+
+    exit_screen = False
+    while not exit_screen:
+
+        print_line( '  ' )
+        print_line( '1 para investir', left=True )
+        print_line( '2 para quiz', left=True )
+        print_line( '3 para voltar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
+
+        if choice in ['1', '2', '3']:
+            exit_screen = True
+            global screen
+            if choice == '1':
+
+                exit_screen = False
+                while not exit_screen:
+
+                    print_line( '  ' )
+                    print_line( '1 Fundos', left=True )
+                    print_line( '2 Renda fixa', left=True )
+                    print_line( '3 Renda variável', left=True )
+                    print_line( '4 COE', left=True )
+                    print_line( '5 Ofertas públicas', left=True )
+                    print_line( '6 Tesouro direto', left=True )
+                    print_line( '7 Previdência', left=True )
+                    print_line( '8 para voltar', left=True )
+                    print_line( '  ' )
+                    choice = input_line( 'choice' )
+
+                    if choice in ['1', '2', '3', '4', '5', '6', '7', '8']:
+                        exit_screen = True
+                        screen = 'detalhes'
+                        if choice == '1':
+                            print_line( 'Seu dinheiro foi investido em Fundos' )
+                        elif choice == '2':
+                            print_line( 'Seu dinheiro foi investido em Renda fixa' )
+                        elif choice == '3':
+                            print_line( 'Seu dinheiro foi investido em Renda variável' )
+                        elif choice == '4':
+                            print_line( 'Seu dinheiro foi investido em COE' )
+                        elif choice == '5':
+                            print_line( 'Seu dinheiro foi investido em Ofertas públicas' )
+                        elif choice == '6':
+                            print_line( 'Seu dinheiro foi investido em Tesouro direto' )
+                        elif choice == '7':
+                            print_line( 'Seu dinheiro foi investido em Previdência' )
+                    else:
+                        print_line( 'Escolha inválida' )
+
+            elif choice == '2':
+                screen = 'quiz'
+            elif choice == '3':
+                screen = 'detalhes'
+        else:
+            print_line( 'Escolha inválida' )
+
+
+
+def quiz():
+
+    print_line( 'Quiz' )
+    print_line( '  ' )
+    print_line( 'Quando é a Alíquota sobre o' )
+    print_line( 'imposto de Renda do CDB retido' )
+    print_line( 'na fonte no prazo de até 180 dias?' )
+
+    exit_screen = False
+    while not exit_screen:
+
+        print_line( '  ' )
+        print_line( '1 para 20 %', left=True )
+        print_line( '2 para 22,5 %', left=True )
+        print_line( '3 para 23 %', left=True )
+        print_line( '4 para 15 %', left=True )
+        print_line( '5 para sair', left=True )
+        choice = input_line( 'choice' )
+
+        if choice in ['1', '2', '3', '4', '5']:
+            exit_screen = True
+            global screen
+            screen = 'investimentos'
+            if int(choice) < 5:
+                if choice == '2':
+                    print_line( 'Acertou !!!', left=True )
+                else:
+                    print_line( 'Não foi dessa vez :(', left=True )
+                print_line( '  ' )
+                print_line( 'Enter para sair', left=True )
+                print_line( '  ' )
+                choice = input_line( 'choice' )
+        else:
+            print_line( 'Escolha inválida' )
 
 
 
 def reportar_erro():
+
     print_line( 'Reportar erro' )
     print_line( '  ' )
     chave = input_line( 'any', 'Em qual lugar você encontrou o problema' )
@@ -782,7 +893,12 @@ def desafios():
     print_line( 'Principal - Desafios' )
     print_line( '  ' )
     print_line( 'Metas atingidas' )
-    print_line( '10% - 100 pontos' )
+    print_line( '10% - 100 pontos - 10/04/2020' )
+    print_line( '20% - 120 pontos - 12/05/2020' )
+    print_line( '30% - 150 pontos - 19/06/2020' )
+    print_line( '...' )
+    print_line( '  ' )
+    print_line( 'Medalhas' )
     print_line( '...' )
 
     exit_screen = False
@@ -817,8 +933,12 @@ def ranking():
 
     print_line( 'Ranking' )
     print_line( '  ' )
-    print_line( 'Pessoa   Objetivos   Medalhas     Pontos' )
-    print_line( 'Igão   A Viagem NY   8 medalhas 100.000 pontos' )
+    print_line( 'Pessoa     Objetivos      Medalhas       Pontos' )
+    print_line( 'Igão       Viagem NY    50 medalhas  100.000 pontos' )
+    print_line( 'Thamires     Carro      42 medalhas   91.000 pontos' )
+    print_line( 'Lucas        Casa       40 medalhas   85.000 pontos' )
+    print_line( 'Lucas       Viagem      35 medalhas   80.000 pontos' )
+    print_line( 'Mikael     Apartamento  34 medalhas   76.000 pontos' )
     print_line( '...' )
     print_line( '  ' )
     print_line( 'Enter para sair', left=True )
