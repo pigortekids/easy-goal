@@ -270,69 +270,9 @@ def cadastro():
                 #infos = {"Name": name, "Email": email, "Phone": telefone}
                 #resposta = use_api( account_id, 'opt_in', infos )
                 #print_line( resposta )
-                screen = 'perfil'
-            elif choice == '2':
-                screen = 'termos'
-        else:
-            print_line( 'Escolha inválida' )
-
-
-def perfil():
-
-    print_line( 'Perfil' )
-    print_line( 'Nos ajude a te conhecer' )
-    print_line( 'um pouco melhor' )
-
-    exit_question = False
-    while not exit_question:
-
-        print_line( '  ' )
-        print_line( 'Você que paga todas as suas contas?' )
-        print_line( '1.sim      2.não' )
-        choice = input_line( 'choice' )
-        if choice == '1' or choice.lower() == 'sim' or choice == '2' or choice.lower().replace('ã','a') == 'nao':
-            exit_question = True
-        else:
-            print_line( 'Escolha inválida' )
-    
-    exit_question = False
-    while not exit_question:
-        print_line( '  ' )
-        print_line( 'Você tem o costume de guardar dinheiro?' )
-        print_line( '1.sim      2.não' )
-        choice = input_line( 'choice' )
-        if choice == '1' or choice.lower() == 'sim' or choice == '2' or choice.lower().replace('ã','a') == 'nao':
-            exit_question = True
-        else:
-            print_line( 'Escolha inválida' )
-        
-    exit_question = False
-    while not exit_question:
-        print_line( '  ' )
-        print_line( 'Você já esteve no vermelho?' )
-        print_line( '1.sim      2.não' )
-        choice = input_line( 'choice' )
-        if choice == '1' or choice.lower() == 'sim' or choice == '2' or choice.lower().replace('ã','a') == 'nao':
-            exit_question = True
-        else:
-            print_line( 'Escolha inválida' )
-
-    exit_screen = False
-    while not exit_screen:
-
-        print_line( '  ' )
-        print_line( '1 para avançar', left=True )
-        print_line( '2 para voltar', left=True )
-        print_line( '  ' )
-        choice = input_line( 'choice' )
-
-        if choice in ['1', '2']:
-            exit_screen = True
-            global screen
-            if choice == '1':
                 screen = 'objetivo'
             elif choice == '2':
-                screen = 'cadastro'
+                screen = 'termos'
         else:
             print_line( 'Escolha inválida' )
 
@@ -350,7 +290,7 @@ def objetivo():
             future_date = True
         else:
             print_line( 'Selecione uma data pelo menos 1 mês no futuro' )
-    print_line( 'Qual o valor mpinimo que pretende adicionar', left = True )
+    print_line( 'Qual o valor mínimo que pretende adicionar', left = True )
     valor_minimo_mes = input_line( 'float', 'em R$ como saldo mensalmente', 'Valor inválido' )
 
     exit_screen = False
@@ -378,7 +318,7 @@ def brindes():
 
     print_line( 'Brindes' )
     print_line( '  ' )
-    print_line( 'Agora nos diga qual brindes' )
+    print_line( 'Agora nos diga quais brindes' )
     print_line( 'você gostaria de ganhar?' )
 
     exit_screen = False
@@ -441,16 +381,25 @@ def primeiro_saldo():
 
 def detalhes():
 
-    print_line( 'Principal - Detalhes' )
+    print_line( 'Tela Principal' )
     print_line( '  ' )
     nome = use_api( account_id, 'conta' )['Nickname']
     print_line( 'Olá {0}'.format( nome ) )
+    print_line( 'Informações do seu objetivo "Carro Fiat Uno"' )
+    print_line( '  ' )
     saldo = float(use_api( account_id, 'saldo' ))
     print_line( 'R$ {0:,.2f}'.format( saldo ) )
-    print_line( 'de R$ 100.000,00' )
-    print_line( 'faltam R$ {0:,.2f}'.format( 100000 - saldo ) )
-    print_line( '{0:.1f}%'.format( saldo / 1000 ) )
-    print_line( '...' )
+    print_line( 'de R$ 55,000.00' )
+    print_line( 'faltam R$ {0:,.2f}'.format( 55000 - saldo ) )
+    print_line( '  ' )
+    print_line( 'Progresso {0:.1f}%'.format( saldo / 1000 ) )
+    print_line( '  ' )
+    print_line( 'Data inicio do objetivo     09/10/2020' )
+    print_line( 'Data para alcançar objetivo 25/10/2020' )
+    print_line( 'Faltam 14 dias' )
+    print_line( 'Valor ideal p/mês R$ 5.500' )
+    print_line( '  ' )
+    print_line( 'Saldo de Safra Moedas: 700' )
 
     exit_screen = False
     while not exit_screen:
@@ -462,15 +411,16 @@ def detalhes():
         print_line( '4 Resgate', left=True )
         print_line( '5 Adicionar saldo', left=True )
         print_line( '6 Compartilhar objetivo', left=True )
-        print_line( '7 Loja de pontos', left=True )
+        print_line( '7 Loja', left=True )
         print_line( '8 Indique um amigo', left=True )
         print_line( '9 Investimentos', left=True )
-        print_line( '10 Reportar erro', left=True )
-        print_line( '11 Sair', left=True )
+        print_line( '10 Novo objetivo', left=True )
+        print_line( '11 Reportar erro', left=True )
+        print_line( '12 Sair', left=True )
         print_line( '  ' )
         choice = input_line( 'choice' )
 
-        if choice in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']:
+        if choice in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']:
             exit_screen = True
             global screen
             if choice == '1':
@@ -486,14 +436,16 @@ def detalhes():
             elif choice == '6':
                 screen = 'compartilhar_objetivo'
             elif choice == '7':
-                screen = 'loja_pontos'
+                screen = 'loja'
             elif choice == '8':
                 screen = 'indique_amigo'
             elif choice == '9':
-                screen = 'investimentos'
+                screen = 'responder_suitability'
             elif choice == '10':
-                screen = 'reportar_erro'
+                screen = 'objetivo'
             elif choice == '11':
+                screen = 'reportar_erro'
+            elif choice == '12':
                 global exit_app
                 exit_app = True
         else:
@@ -575,33 +527,7 @@ def adicionar_saldo():
 
         print_line( '  ' )
         print_line( '1 para adicionar', left=True )
-        print_line( '2 para voltar', left=True )
-        print_line( '  ' )
-        choice = input_line( 'choice' )
-
-        if choice in ['1', '2']:
-            exit_screen = True
-            global screen
-            screen = 'detalhes'
-            if choice == '1':
-                print_line( 'Valor de R$ {0:.2f} adicionado com sucesso'.format( valor ) )
-        else:
-            print_line( 'Escolha inválida' )
-
-
-
-def compartilhar_objetivo():
-
-    print_line( 'Compartilhar objetivo' )
-    print_line( '  ' )
-    objetivo = input_line( 'any', 'Nome do objetivo: ' )
-
-    exit_screen = False
-    while not exit_screen:
-
-        print_line( '  ' )
-        print_line( '1 para digitar as informações', left=True )
-        print_line( '2 para QR Code', left=True )
+        print_line( '2 para compartilhar', left=True )
         print_line( '3 para voltar', left=True )
         print_line( '  ' )
         choice = input_line( 'choice' )
@@ -611,27 +537,14 @@ def compartilhar_objetivo():
             global screen
             screen = 'detalhes'
             if choice == '1':
-                nome = input_line( 'any', 'Nome' )
-                cpf = input_line( 'cpf', 'CPF', 'CPF inválido' )
-                email = input_line( 'email', 'E-mail', 'E-mail inválido' )
-                print_line( '  ' )
-
-                exit_screen = False
-                while not exit_screen:
-
-                    print_line( '1 para adicionar', left=True )
-                    print_line( '2 para voltar', left=True )
-                    print_line( '  ' )
-                    choice = input_line( 'choice' )
-
-                    if choice in ['1', '2']:
-                        exit_screen = True
-                        if choice == '1':
-                            print_line( 'Valor de R$ {0:.2f} compartilhado com sucesso'.format(float(valor)) )
-                    else:
-                        print_line( 'Escolha inválida' )
+                print_line( 'Valor de R$ {0:.2f} adicionado com sucesso'.format( valor ) )
             elif choice == '2':
-                print_line( 'Scaneie o QR code ou compartilhe através das redes sociais' )
+                print_line( 'Copie o link abaixo e compartilhe' )
+                print_line( 'http://www.easygoal.com.br/direct=SDAvkmjuqw21654' )
+                print_line( '  ' )
+                print_line( 'Assim que alguem adicionar o saldo de R$ {0:.2f},' )
+                print_line( 'você ganha 40 Safra Moedas' )
+            if choice in ['1', '2']:
                 print_line( '  ' )
                 print_line( 'Enter para sair' )
                 choice = input_line( 'choice' )
@@ -640,7 +553,41 @@ def compartilhar_objetivo():
 
 
 
-def loja_pontos():
+def compartilhar_objetivo():
+
+    print_line( 'Compartilhar objetivo' )
+    print_line( '  ' )
+    print_line( 'Nome do objetivo: Carro Fiat Uno' )
+    print_line( '  ' )
+    print_line( 'QR CODE' )
+
+    exit_screen = False
+    while not exit_screen:
+
+        print_line( '  ' )
+        print_line( '1 para link compartilhavel', left=True )
+        print_line( '2 para voltar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
+
+        if choice in ['1', '2']:
+            exit_screen = True
+            global screen
+            screen = 'detalhes'
+            if choice == '1':
+                print_line( 'Copie o link abaixo e compartilhe' )
+                print_line( 'http://www.easygoal.com.br/direct=SDAvkmjuqw21654' )
+                print_line( '  ' )
+                print_line( 'Assim que alguem utilizar seu link, você ganha 100 Safra Moedas' )
+                print_line( '  ' )
+                print_line( 'Enter para sair' )
+                choice = input_line( 'choice' )
+        else:
+            print_line( 'Escolha inválida' )
+
+
+
+def loja():
 
     print_line( 'Loja' )
 
@@ -648,10 +595,10 @@ def loja_pontos():
     while not exit_screen:
 
         print_line( '  ' )
-        print_line( '1 R$ 20,00 no Ifood por 5000 moedas', left=True )
-        print_line( '2 R$ 50,00 no Uber por 12000 moedas', left=True )
-        print_line( '3 R$ 200,00 na CVC por 30000 moedas', left=True )
-        print_line( '4 um mês de Netflix por 5000 moedas', left=True )
+        print_line( '1 R$ 20,00 em comida por 5000 moedas', left=True )
+        print_line( '2 R$ 50,00 em transporte por 12000 moedas', left=True )
+        print_line( '3 R$ 200,00 em viagens por 30000 moedas', left=True )
+        print_line( '4 R$ 100,00 em gasolina por 5000 moedas', left=True )
         print_line( '5 para voltar', left=True )
         print_line( '  ' )
         choice = input_line( 'choice' )
@@ -662,6 +609,9 @@ def loja_pontos():
             screen = 'detalhes'
             if int(choice) < 5:
                 print_line( 'Compra realizada com sucesso!' )
+                print_line( '  ' )
+                print_line( 'Enter para sair' )
+                choice = input_line( 'choice' )
         else:
             print_line( 'Escolha inválida' )
 
@@ -717,6 +667,36 @@ def indique_amigo():
 
 
 
+def responder_suitability():
+
+    print_line( 'Suitability' )
+    print_line( '  ' )
+    print_line( 'Antes de começar os seus' )
+    print_line( ' investimentos e aprender mais' )
+    print_line( 'sobre, por favor preencha o' )
+    print_line( 'Questionário de Suitability' )
+
+    exit_screen = False
+    while not exit_screen:
+
+        print_line( '  ' )
+        print_line( '1 para Responder', left=True )
+        print_line( '2 para voltar', left=True )
+        print_line( '  ' )
+        choice = input_line( 'choice' )
+
+        if choice in ['1', '2']:
+            exit_screen = True
+            global screen
+            if choice == '1':
+                print_line( 'Questionário de Suitability respondido com sucesso' )
+                screen = 'investimentos'
+            elif choice == '2':
+                screen = 'detalhes'
+        else:
+            print_line( 'Escolha inválida' )
+
+
 def investimentos():
 
     print_line( 'Investimento' )
@@ -725,17 +705,24 @@ def investimentos():
     while not exit_screen:
 
         print_line( '  ' )
-        print_line( '1 para investir', left=True )
+        print_line( '1 para aprender mais', left=True )
         print_line( '2 para quiz', left=True )
-        print_line( '3 para voltar', left=True )
+        print_line( '3 para investir', left=True )
+        print_line( '4 para voltar', left=True )
         print_line( '  ' )
         choice = input_line( 'choice' )
 
-        if choice in ['1', '2', '3']:
+        if choice in ['1', '2', '3', '4']:
             exit_screen = True
             global screen
             if choice == '1':
-
+                print_line( 'Acesse o link abaixo para saber mais sobre Renda Fixa' )
+                print_line( 'https://www.youtube.com/watch?v=mHSzuQ_9u2U' )
+                exit_screen = False
+            elif choice == '2':
+                screen = 'quiz'
+            elif choice == '3':
+                
                 exit_screen = False
                 while not exit_screen:
 
@@ -768,12 +755,13 @@ def investimentos():
                             print_line( 'Seu dinheiro foi investido em Tesouro direto' )
                         elif choice == '7':
                             print_line( 'Seu dinheiro foi investido em Previdência' )
+                        print_line( '  ' )
+                        print_line( 'Enter para sair' )
+                        choice = input_line( 'choice' )
                     else:
                         print_line( 'Escolha inválida' )
 
-            elif choice == '2':
-                screen = 'quiz'
-            elif choice == '3':
+            elif choice == '4':
                 screen = 'detalhes'
         else:
             print_line( 'Escolha inválida' )
@@ -784,7 +772,7 @@ def quiz():
 
     print_line( 'Quiz' )
     print_line( '  ' )
-    print_line( 'Quando é a Alíquota sobre o' )
+    print_line( 'Quanto é a Alíquota sobre o' )
     print_line( 'imposto de Renda do CDB retido' )
     print_line( 'na fonte no prazo de até 180 dias?' )
 
@@ -805,7 +793,7 @@ def quiz():
             screen = 'investimentos'
             if int(choice) < 5:
                 if choice == '2':
-                    print_line( 'Acertou !!!', left=True )
+                    print_line( 'Acertou, você acabou de ganhar 100 Safra Moedas !!!', left=True )
                 else:
                     print_line( 'Não foi dessa vez :(', left=True )
                 print_line( '  ' )
@@ -907,21 +895,24 @@ def desafios():
         print_line( '  ' )
         print_line( '1 para Detalhes', left=True )
         print_line( '2 para Extrato', left=True )
-        print_line( '3 para Leaderboard', left=True )
-        print_line( '4 para sair', left=True )
+        print_line( '3 para Ranking', left=True )
+        print_line( '4 para Metas Globais', left=True )
+        print_line( '5 para sair', left=True )
         print_line( '  ' )
-        choice = input_line( 'choice', left=True )
+        choice = input_line( 'choice' )
 
-        if choice in ['1', '2', '3', '4']:
+        if choice in ['1', '2', '3', '4', '5']:
             exit_screen = True
             global screen
             if choice == '1':
                 screen = 'detalhes'
             elif choice == '2':
-                screen = 'depositos'
+                screen = 'extrato'
             elif choice == '3':
                 screen = 'ranking'
             elif choice == '4':
+                screen = 'globais'
+            elif choice == '5':
                 global exit_app
                 exit_app = True
         else:
@@ -933,12 +924,29 @@ def ranking():
 
     print_line( 'Ranking' )
     print_line( '  ' )
-    print_line( 'Pessoa     Objetivos      Medalhas       Pontos' )
-    print_line( 'Igão       Viagem NY    50 medalhas  100.000 pontos' )
-    print_line( 'Thamires     Carro      42 medalhas   91.000 pontos' )
-    print_line( 'Lucas        Casa       40 medalhas   85.000 pontos' )
-    print_line( 'Lucas       Viagem      35 medalhas   80.000 pontos' )
-    print_line( 'Mikael     Apartamento  34 medalhas   76.000 pontos' )
+    print_line( '  Pessoa     Objetivos   Medalhas  Safra Moedas acumuladas' )
+    print_line( 'Igão          15         50             100.000' )
+    print_line( 'Thamires       8         42              91.000' )
+    print_line( 'Lucas          8         40              85.000' )
+    print_line( 'Lucas          6         35              80.000' )
+    print_line( 'Mikael         5         34              76.000' )
+    print_line( '...' )
+    print_line( '  ' )
+    print_line( 'Enter para sair', left=True )
+    print_line( '  ' )
+    choice = input_line( 'choice' )
+    global screen
+    screen = 'desafios'
+
+
+
+def globais():
+
+    print_line( 'Metas Globais' )
+    print_line( '  ' )
+    print_line( '          Meta                      Marco        Safra Moedas' )
+    print_line( '1.000 clientes                  550/1.000        1.000' )
+    print_line( '1.000 objetivos finalizados     100/1.000       10.000' )
     print_line( '...' )
     print_line( '  ' )
     print_line( 'Enter para sair', left=True )
@@ -961,6 +969,7 @@ if __name__ == '__main__':
         if not method:
             print_line( 'Tela ainda não configurada' )
             exit_app = True
-        print_line( '' )
-        method()
-        print_line( '' )
+        else:
+            print_line( '' )
+            method()
+            print_line( '' )
