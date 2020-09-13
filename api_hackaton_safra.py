@@ -40,16 +40,24 @@ def use_api( accountId, tipo_chamada_api, infos=None ):
     # pega diretorio do script
     script_folder = os.path.dirname(os.path.realpath(__file__)) + '\\'
 
+    refresh = False
     # leitura do arquivo com token e data de expiracao
-    with open( script_folder + 'token.txt', 'r' ) as f:
-        auth_token = f.readline().replace('\n', '')
-        horario_exp_str = f.readline()
+    path_token = script_folder + 'token.txt'
+    if os.path.exists( path_token ):
+        with open( script_folder + 'token.txt', 'r' ) as f:
+            auth_token = f.readline().replace('\n', '')
+            horario_exp_str = f.readline()
 
-    # transforma a data em string para datetime
-    horario_exp = datetime.strptime(horario_exp_str, '%Y-%m-%d %H:%M:%S.%f')
+        # transforma a data em string para datetime
+        horario_exp = datetime.strptime(horario_exp_str, '%Y-%m-%d %H:%M:%S.%f')
 
-    # caso o token expirou, renova o token
-    if horario_exp <= datetime.now():
+        # caso o token expirou, renova o token
+        if horario_exp <= datetime.now():
+            refresh = True
+    else:
+        refresh = True
+
+    if refresh:
         auth = HTTPBasicAuth('e33b611a81204f318a15d5728b998661', '31591ad2-1cbd-44e9-a01c-1bbcc0985544')
         url = 'https://idcs-902a944ff6854c5fbe94750e48d66be5.identity.oraclecloud.com/oauth2/v1/token'
         body = 'grant_type=client_credentials&scope=urn:opc:resource:consumer::all'
